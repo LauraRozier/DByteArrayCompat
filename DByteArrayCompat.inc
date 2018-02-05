@@ -1,1 +1,2 @@
+{$POINTERMATH ON}
 {.$DEFINE IndyCompat}

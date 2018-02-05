@@ -126,6 +126,8 @@ end;
 class procedure TByteConverter.PutBytes(var aDest: PByte; aBytes: TBytes; aOffset, aLength: Integer);
 var
   I: Integer;
+  TempLen1,
+  TempLen2: Integer;
 begin
   if aBytes = nil then
     raise EArgumentNilException.Create('aBytes is nil');
@@ -136,7 +138,7 @@ begin
       'Must be non-negative and less than the size of the collection.'
     );
 
-  if (Length(aBytes) - aLength < aOffset) or (SizeOf(aDest) < aLength) then
+  if (TempLen1 - aLength < aOffset) then
     raise EArgumentException.Create(
       'Destination is not long enough to copy all the items in the collection.' + sLineBreak +
       'Check aOffset and aLength.'
@@ -488,7 +490,7 @@ var
   Buff: PByte;
 begin
   Buff := @aSrc;
-  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Int64)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Word): TIdBytes;
@@ -496,7 +498,7 @@ var
   Buff: PByte;
 begin
   Buff := @aSrc;
-  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Word)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Cardinal): TIdBytes;
