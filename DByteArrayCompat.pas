@@ -35,6 +35,7 @@ type
     type PBytes = ^TBytes;
     class var fNeedEndianSwap: Boolean;
     class function GetBytes(aSrc: PBytes; aLength: Integer): TBytes; overload; static;
+    class function GetBytes(aSrc: PByte; aLength: Integer): TBytes; overload; static;
     class procedure PutBytes(var aDest: PByte; aBytes: TBytes; aOffset, aLength: Integer); overload; static;
   public
     class property NeedEndianSwap: Boolean read fNeedEndianSwap write fNeedEndianSwap;
@@ -117,7 +118,23 @@ begin
   SetLength(Result, aLength);
 
   for I := 0 to aLength - 1 do
-    Result[I] := aSrc^[I];
+    if TByteConverter.fNeedEndianSwap then
+      Result[aLength - (I + 1)] := aSrc^[I]
+    else
+      Result[I] := aSrc^[I];
+end;
+
+class function TByteConverter.GetBytes(aSrc: PByte; aLength: Integer): TBytes;
+var
+  I: Integer;
+begin
+  SetLength(Result, aLength);
+
+  for I := 0 to aLength - 1 do
+    if TByteConverter.fNeedEndianSwap then
+      Result[aLength - (I + 1)] := aSrc[I]
+    else
+      Result[I] := aSrc[I];
 end;
 
 class procedure TByteConverter.PutBytes(var aDest: PByte; aBytes: TBytes; aOffset, aLength: Integer);
@@ -165,43 +182,67 @@ begin
 end;
 
 class function TByteConverter.GetBytes(aSrc: ShortInt): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(ShortInt));
 end;
 
 class function TByteConverter.GetBytes(aSrc: SmallInt): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(SmallInt));
 end;
 
 class function TByteConverter.GetBytes(aSrc: Integer): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(Integer));
 end;
 
 class function TByteConverter.GetBytes(aSrc: Int64): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(Int64));
 end;
 
 class function TByteConverter.GetBytes(aSrc: Word): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(Word));
 end;
 
 class function TByteConverter.GetBytes(aSrc: Cardinal): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(Cardinal));
 end;
 
 class function TByteConverter.GetBytes(aSrc: UInt64): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(UInt64));
 end;
 
 class function TByteConverter.GetBytes(aSrc: Single): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(Single));
 end;
 
 class function TByteConverter.GetBytes(aSrc: Double): TBytes;
@@ -212,23 +253,35 @@ begin
 end;
 
 class function TByteConverter.GetBytes(aSrc: AnsiChar): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(AnsiChar));
 end;
 
 class function TByteConverter.GetBytes(aSrc: Char): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, SizeOf(Char));
 end;
 
 class function TByteConverter.GetBytes(aSrc: AnsiString): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), Length(aSrc) * SizeOf(AnsiChar));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, Length(aSrc) * SizeOf(AnsiChar));
 end;
 
 class function TByteConverter.GetBytes(aSrc: string): TBytes;
+var
+  Buff: PByte;
 begin
-  Result := TByteConverter.GetBytes(PBytes(aSrc), Length(aSrc) * SizeOf(Char));
+  Buff := @aSrc;
+  Result := TByteConverter.GetBytes(Buff, Length(aSrc) * SizeOf(Char));
 end;
 
 class function TByteConverter.ToBoolean(aBytes: TBytes; aOffset: Integer): Boolean;
@@ -421,43 +474,67 @@ begin
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: ShortInt): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(ShortInt)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: SmallInt): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(SmallInt)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Integer): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Int64): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Word): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Cardinal): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: UInt64): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Single): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Double): TIdBytes;
@@ -468,23 +545,35 @@ begin
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: AnsiChar): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Char): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), SizeOf(aSrc)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: AnsiString): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), Length(aSrc) * SizeOf(AnsiChar)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, Length(aSrc) * SizeOf(AnsiChar)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: string): TIdBytes;
+var
+  Buff: PByte;
 begin
-  Result := TIdBytes(TByteConverter.GetBytes(PBytes(aSrc), Length(aSrc) * SizeOf(Char)));
+  Buff := @aSrc;
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, Length(aSrc) * SizeOf(Char)));
 end;
 
 class function TByteConverter.ToBoolean(aBytes: TIdBytes; aOffset: Integer): Boolean;
