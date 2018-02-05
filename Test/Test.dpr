@@ -1,4 +1,4 @@
-program Test;
+﻿program Test;
 {$APPTYPE CONSOLE}
 {$R *.res}
 uses
@@ -626,6 +626,27 @@ begin
         testStr := TByteConverter.ToStr(buff, 0);
 
         if testStr <> 'Test' then
+          raise Exception.Create('testStr');
+
+        testStr := 'Контрольная работа';
+        buff    := TByteConverter.GetBytes(testStr);
+        testStr := TByteConverter.ToStr(buff, 0);
+
+        if testStr <> 'Контрольная работа' then
+          raise Exception.Create('testStr');
+
+        testStr := 'テスト';
+        buff    := TByteConverter.GetBytes(testStr);
+        testStr := TByteConverter.ToStr(buff, 0);
+
+        if testStr <> 'テスト' then
+          raise Exception.Create('testStr');
+
+        testStr := '測試';
+        buff    := TByteConverter.GetBytes(testStr);
+        testStr := TByteConverter.ToStr(buff, 0);
+
+        if testStr <> '測試' then
           raise Exception.Create('testStr');
 
         SetConsoleTextAttribute(
