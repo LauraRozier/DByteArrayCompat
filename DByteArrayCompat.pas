@@ -22,7 +22,7 @@
 unit DByteArrayCompat;
 
 interface
-{$I ./Common/DByteArrayCompat.inc}
+{$I ../DByteArrayCompat.inc}
 uses
   SysUtils
   {$IFDEF IndyCompat}
