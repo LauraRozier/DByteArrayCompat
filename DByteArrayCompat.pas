@@ -504,7 +504,7 @@ var
   Buff: PByte;
 begin
   Buff := @aSrc;
-  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Cardinal)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: UInt64): TIdBytes;
@@ -512,7 +512,7 @@ var
   Buff: PByte;
 begin
   Buff := @aSrc;
-  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(UInt64)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Single): TIdBytes;
@@ -520,7 +520,7 @@ var
   Buff: PByte;
 begin
   Buff := @aSrc;
-  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Single)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Double): TIdBytes;
@@ -535,7 +535,7 @@ var
   Buff: PByte;
 begin
   Buff := @aSrc;
-  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(AnsiChar)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Char): TIdBytes;
@@ -543,7 +543,7 @@ var
   Buff: PByte;
 begin
   Buff := @aSrc;
-  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Integer)));
+  Result := TIdBytes(TByteConverter.GetBytes(Buff, SizeOf(Char)));
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: AnsiString): TIdBytes;
