@@ -259,18 +259,50 @@ end;
 
 class function TByteConverter.GetBytes(aSrc: AnsiString): TBytes;
 var
-  Buff: PByte;
+  Buff:         TBytes;
+  C:            AnsiChar;
+  BuffLength,
+  OldResLength,
+  I:            Integer;
 begin
-  Buff := @aSrc;
-  Result := TByteConverter.GetBytes(Buff, Length(aSrc) * SizeOf(AnsiChar));
+  SetLength(Result, 0);
+  BuffLength := SizeOf(C);
+
+  for C in aSrc do
+  begin
+    OldResLength := Length(Result);
+    Buff         := TByteConverter.GetBytes(C);
+    SetLength(Result, OldResLength + BuffLength);
+
+    for I := 0 to BuffLength - 1 do
+    begin
+      Result[OldResLength + I] := Buff[I];
+    end;
+  end;
 end;
 
 class function TByteConverter.GetBytes(aSrc: string): TBytes;
 var
-  Buff: PByte;
+  Buff:         TBytes;
+  C:            Char;
+  BuffLength,
+  OldResLength,
+  I:            Integer;
 begin
-  Buff := @aSrc;
-  Result := TByteConverter.GetBytes(Buff, Length(aSrc) * SizeOf(Char));
+  SetLength(Result, 0);
+  BuffLength := SizeOf(C);
+
+  for C in aSrc do
+  begin
+    OldResLength := Length(Result);
+    Buff         := TByteConverter.GetBytes(C);
+    SetLength(Result, OldResLength + BuffLength);
+
+    for I := 0 to BuffLength - 1 do
+    begin
+      Result[OldResLength + I] := Buff[I];
+    end;
+  end;
 end;
 
 class function TByteConverter.ToBoolean(aBytes: TBytes; aOffset: Integer): Boolean;
@@ -426,7 +458,7 @@ begin
       'Must be non-negative and less than the size of the collection.'
     );
 
-  SetString(Result, PAnsiChar(@aBytes[aOffset]), aLength);
+  SetString(Result, PAnsiChar(@aBytes[aOffset]), aLength div SizeOf(AnsiChar));
 end;
 
 class function TByteConverter.ToStr(aBytes: TBytes): string;
@@ -440,6 +472,11 @@ begin
 end;
 
 class function TByteConverter.ToStr(aBytes: TBytes; aOffset, aLength: Integer): string;
+var
+  I,
+  TrueLength,
+  Offset:     Integer;
+  SB:         TStringBuilder;
 begin
   if aBytes = nil then
     raise EArgumentNilException.Create('aBytes is nil');
@@ -450,7 +487,22 @@ begin
       'Must be non-negative and less than the size of the collection.'
     );
 
-  SetString(Result, PChar(@aBytes[aOffset]), aLength);
+  if ((Length(aBytes) - aOffset) div SizeOf(Char)) = aLength then
+    trueLength := aLength
+  else
+    trueLength := (Length(aBytes) - aOffset) div SizeOf(Char);
+
+  SB     := TStringBuilder.Create;
+  Offset := aOffset;
+
+  for I := 0 to trueLength - 1 do
+  begin
+    SB.Append(TByteConverter.ToChar(aBytes, Offset));
+    Inc(Offset, SizeOf(Char));
+  end;
+
+  Result := SB.ToString;
+  FreeAndNil(SB);
 end;
 
 {$IFDEF IndyCompat}
