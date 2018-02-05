@@ -232,10 +232,13 @@ begin
 end;
 
 class function TByteConverter.GetBytes(aSrc: Double): TBytes;
+const
+  Count: Integer = SizeOf(Double);
 var
   Buff: array[0..SizeOf(Double) - 1] of Byte absolute aSrc;
 begin
-  Result := PBytes(@Buff)^;
+  SetLength(Result, Count);
+  Result := Copy(TBytes(@Buff), 0, Count);
 end;
 
 class function TByteConverter.GetBytes(aSrc: AnsiChar): TBytes;
@@ -524,10 +527,13 @@ begin
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: Double): TIdBytes;
+const
+  Count: Integer = SizeOf(Double);
 var
   Buff: array[0..SizeOf(Double) - 1] of Byte absolute aSrc;
 begin
-  Result := TIdBytes(GetBytes(aSrc));
+  SetLength(Result, Count);
+  Result := Copy(TIdBytes(@Buff), 0, Count);
 end;
 
 class function TByteConverter.GetIdBytes(aSrc: AnsiChar): TIdBytes;
