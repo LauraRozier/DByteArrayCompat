@@ -34,7 +34,6 @@ type
   strict private
     type PBytes = ^TBytes;
     class var fNeedEndianSwap: Boolean;
-    class function GetBytes(aSrc: PBytes; aLength: Integer): TBytes; overload; static;
     class function GetBytes(aSrc: PByte; aLength: Integer): TBytes; overload; static;
     class procedure PutBytes(var aDest: PByte; aBytes: TBytes; aOffset, aLength: Integer); overload; static;
   public
@@ -110,19 +109,6 @@ type
   end;
 
 implementation
-
-class function TByteConverter.GetBytes(aSrc: PBytes; aLength: Integer): TBytes;
-var
-  I: Integer;
-begin
-  SetLength(Result, aLength);
-
-  for I := 0 to aLength - 1 do
-    if TByteConverter.fNeedEndianSwap then
-      Result[aLength - (I + 1)] := aSrc^[I]
-    else
-      Result[I] := aSrc^[I];
-end;
 
 class function TByteConverter.GetBytes(aSrc: PByte; aLength: Integer): TBytes;
 var
