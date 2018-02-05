@@ -590,13 +590,6 @@ begin
     { AnsiString Test }
     try
       try
-        testAStr := '';
-        buff     := TByteConverter.GetBytes(testAStr);
-        testAStr := TByteConverter.ToAnsiStr(buff, 0);
-
-        if testAStr <> '' then
-          raise Exception.Create('testAStr');
-
         testAStr := 'Test';
         buff     := TByteConverter.GetBytes(testAStr);
         testAStr := TByteConverter.ToAnsiStr(buff, 0);
@@ -628,13 +621,6 @@ begin
     { String Test }
     try
       try
-        testStr := '';
-        buff    := TByteConverter.GetBytes(testStr);
-        testStr := TByteConverter.ToStr(buff, 0);
-
-        if testStr <> '' then
-          raise Exception.Create('testStr');
-
         testStr := 'Test';
         buff    := TByteConverter.GetBytes(testStr);
         testStr := TByteConverter.ToStr(buff, 0);
