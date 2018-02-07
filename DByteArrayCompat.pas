@@ -22,7 +22,7 @@
 unit DByteArrayCompat;
 
 interface
-{$I ../DByteArrayCompat.inc}
+{$I ./DByteArrayCompat.inc}
 uses
   SysUtils
   {$IFDEF IndyCompat}
@@ -32,8 +32,10 @@ uses
 type
   TByteConverter = class sealed
   strict private
-    type PBytes = ^TBytes;
-    class var fNeedEndianSwap: Boolean;
+    type
+      PBytes = ^TBytes;
+    class var
+      fNeedEndianSwap: Boolean;
     class function GetBytes(aSrc: PByte; aLength: Integer): TBytes; overload; static;
     class procedure PutBytes(var aDest: PByte; aBytes: TBytes; aOffset, aLength: Integer); overload; static;
   public
